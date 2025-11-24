@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - ".github/workflows/ci.yml"
+      - "patches/oxc-node.cargo-config.patch"
   pull_request:
     branches:
       - main
+    paths:
+      - ".github/workflows/ci.yml"
+      - "patches/oxc-node.cargo-config.patch"
 
 jobs:
   build:
@@ -28,9 +34,17 @@ jobs:
             git
             curl
           pacboy: >-
+            toolchain:p
+            cmake:p
             rust:p
             yarn:p
             ${{ (matrix.sys == 'CLANG64' || matrix.sys == 'CLANGARM64') && 'gcc-compat:p' || '' }}
+
+      - name: Show working directory (Windows)
+        shell: pwsh
+        run: |
+          Get-Location
+          ls
 
       - name: Echo System Info
         shell: msys2 {0}
@@ -38,4 +52,14 @@ jobs:
           echo "MSYSTEM = $MSYSTEM"
           uname -a
           pacman -Q msys2-runtime || true
+          cargo -Vv
           pwd
+
+      - name: Build oxc-node with patch
+        shell: msys2 {0}
+        run: |
+          git clone --depth 1 https://github.com/oxc-project/oxc-node
+          cd oxc-node
+          git apply -v ../patches/oxc-node.cargo-config.patch
+          TARGET=$(rustc -vV | grep '^host:' | awk '{print $2}')
+          cargo build --release --target $TARGET
