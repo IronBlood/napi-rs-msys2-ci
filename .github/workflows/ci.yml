@@ -13,8 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sys: [UCRT64]
-        # sys: [UCRT64, CLANG64, MINGW64, CLANGARM64]
+        sys: [UCRT64, CLANG64, MINGW64, CLANGARM64]
     runs-on: ${{ matrix.sys == 'CLANGARM64' && 'windows-11-arm' || 'windows-latest' }}
 
     steps:
@@ -29,6 +28,7 @@ jobs:
             git
             curl
           pacboy: >-
+            toolchain:p
             rust:p
             yarn:p
             ${{ (matrix.sys == 'CLANG64' || matrix.sys == 'CLANGARM64') && 'gcc-compat:p' || '' }}
