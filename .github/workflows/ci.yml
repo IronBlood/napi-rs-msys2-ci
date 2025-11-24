@@ -53,9 +53,6 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/oxc-project/oxc-node
           cd oxc-node
-          pwd
-          ls -alh .cargo
-          ls -alh ../patches/oxc-node.cargo-config.patch
           git apply -v ../patches/oxc-node.cargo-config.patch
           TARGET=$(rustc -vV | grep '^host:' | awk '{print $2}')
           cargo build --release --target $TARGET
