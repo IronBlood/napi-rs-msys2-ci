@@ -100,8 +100,9 @@ jobs:
         run: |
           cd napi-rs
           yarn install --mode=skip-build --immutable
+          TARGET=$(rustc -vV | grep '^host:' | awk '{print $2}')
 
           # HACK: loaded by napi-raw
-          cp ../oxc-node/target/x86_64-pc-windows-gnu/release/oxc_node.dll node_modules/@oxc-node/core-win32-x64-msvc/oxc-node.win32-x64-msvc.node
+          cp ../oxc-node/target/$TARGET/release/oxc_node.dll node_modules/@oxc-node/core-win32-x64-msvc/oxc-node.win32-x64-msvc.node
 
           yarn workspace @examples/napi build
