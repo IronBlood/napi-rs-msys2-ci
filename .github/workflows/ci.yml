@@ -1,5 +1,11 @@
 name: Build napi-rs with its dependencies
 
+env:
+  DEBUG: "napi:*"
+  RUST_BACKTRACE: 1
+  # https://github.com/nodejs/node/issues/51555#issuecomment-2290742072
+  DISABLE_V8_COMPILE_CACHE: 1
+
 on:
   push:
     branches:
