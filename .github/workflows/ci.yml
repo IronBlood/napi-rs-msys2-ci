@@ -46,3 +46,12 @@ jobs:
           pacman -Q msys2-runtime || true
           cargo -Vv
           pwd
+
+      - name: Build oxc-node with patch
+        shell: msys2 {0}
+        run: |
+          git clone https://github.com/oxc-project/oxc-node
+          cd oxc-node
+          git apply ../patches/oxc-node.cargo-config.patch
+          TARGET=$(rustc -vV | grep '^host:' | awk '{print $2}')
+          cargo build --release --target $TARGET
