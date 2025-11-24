@@ -44,4 +44,5 @@ jobs:
           echo "MSYSTEM = $MSYSTEM"
           uname -a
           pacman -Q msys2-runtime || true
+          cargo -Vv
           pwd
