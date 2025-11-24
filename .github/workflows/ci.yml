@@ -103,7 +103,6 @@ jobs:
           TARGET=$(rustc -vV | grep '^host:' | awk '{print $2}')
           NODE_ARTIFACT=node_modules/@oxc-node/core-win32-x64-msvc/oxc-node.win32-x64-msvc.node
           if [ "$MSYSTEM" = "CLANGARM64" ]; then
-            ls node_modules/@oxc-node/
             NODE_ARTIFACT=node_modules/@oxc-node/core-win32-arm64-msvc/oxc-node.win32-arm64-msvc.node
           fi
 
