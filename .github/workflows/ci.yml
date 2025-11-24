@@ -29,6 +29,7 @@ jobs:
             curl
           pacboy: >-
             toolchain:p
+            cmake:p
             rust:p
             yarn:p
             ${{ (matrix.sys == 'CLANG64' || matrix.sys == 'CLANGARM64') && 'gcc-compat:p' || '' }}
