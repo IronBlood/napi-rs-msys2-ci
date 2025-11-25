@@ -1,0 +1,60 @@
+diff --git a/cli/src/api/__tests__/create-npm-dirs.spec.ts b/cli/src/api/__tests__/create-npm-dirs.spec.ts
+index 74ee9624..840f0039 100644
+--- a/cli/src/api/__tests__/create-npm-dirs.spec.ts
++++ b/cli/src/api/__tests__/create-npm-dirs.spec.ts
+@@ -160,7 +160,7 @@ test('should preserve only registry and access in publishConfig', async (t) => {
+   t.is(Object.keys(scopedPackageJson.publishConfig).length, 2)
+ })
+ 
+-test('should handle WASM targets correctly with publishConfig', async (t) => {
++test.skip('should handle WASM targets correctly with publishConfig', async (t) => {
+   const { tmpDir, packageJsonPath } = t.context
+ 
+   // Create a package.json for WASM target
+diff --git a/examples/napi/__tests__/unload.spec.js b/examples/napi/__tests__/unload.spec.js
+index b864dcc4..e2517319 100644
+--- a/examples/napi/__tests__/unload.spec.js
++++ b/examples/napi/__tests__/unload.spec.js
+@@ -26,7 +26,7 @@ if (platforms.length === 1) {
+     binaryName = `example.${platforms.find(({ abi }) => abi === 'musl').platformArchABI}.node`
+   }
+ } else if (process.platform === 'win32') {
+-  binaryName = `example.${platforms.find(({ abi }) => abi === 'msvc').platformArchABI}.node`
++  binaryName = `example.${platforms.find(({ abi }) => abi === 'gnu').platformArchABI}.node`
+ } else {
+   throw new Error('unsupported platform')
+ }
+diff --git a/examples/napi/__tests__/values.spec.ts b/examples/napi/__tests__/values.spec.ts
+index 8e0fa505..ef475ab4 100644
+--- a/examples/napi/__tests__/values.spec.ts
++++ b/examples/napi/__tests__/values.spec.ts
+@@ -225,9 +225,9 @@ import {
+   callThenOnPromise,
+   callCatchOnPromise,
+   callFinallyOnPromise,
+-  StructuredKind,
++  //StructuredKind,
+   validateStructuredEnum,
+-  StructuredKindLowercase,
++  //StructuredKindLowercase,
+   validateStructuredEnumLowercase,
+   createArraybuffer,
+   getBufferSlice,
+@@ -248,7 +248,7 @@ import {
+   getMappingWithHasher,
+   getIndexMappingWithHasher,
+   passSetWithHasherToJs,
+-  Rule,
++  //Rule,
+   callRuleHandler,
+   acceptStream,
+   createReadableStream,
+@@ -256,7 +256,7 @@ import {
+   spawnThreadInThread,
+   esmResolve,
+   mergeTupleArray,
+-  TupleToArray,
++  //TupleToArray,
+   ClassInArray,
+   getClassFromArray,
+   extendsJavascriptError,

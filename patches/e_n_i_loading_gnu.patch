@@ -1,0 +1,13 @@
+diff --git a/examples/napi/index.cjs b/examples/napi/index.cjs
+index aa786e27..905565c0 100644
+--- a/examples/napi/index.cjs
++++ b/examples/napi/index.cjs
+@@ -123,7 +123,7 @@ function requireNative() {
+       }
+       } else {
+         try {
+-        return require('./example.win32-x64-msvc.node')
++        return require('./example.win32-x64-gnu.node')
+       } catch (e) {
+         loadErrors.push(e)
+       }
