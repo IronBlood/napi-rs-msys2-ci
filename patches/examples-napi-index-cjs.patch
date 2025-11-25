@@ -1,10 +1,13 @@
 diff --git a/examples/napi/index.cjs b/examples/napi/index.cjs
-index aa786e27..8c2d2522 100644
+index aa786e27..435344a5 100644
 --- a/examples/napi/index.cjs
 +++ b/examples/napi/index.cjs
-@@ -107,7 +107,20 @@ function requireNative() {
+@@ -105,9 +105,22 @@ function requireNative() {
+     }
+   } else if (process.platform === 'win32') {
      if (process.arch === 'x64') {
-       if (process.config?.variables?.shlib_suffix === 'dll.a' || process.config?.variables?.node_target_type === 'shared_library') {
+-      if (process.config?.variables?.shlib_suffix === 'dll.a' || process.config?.variables?.node_target_type === 'shared_library') {
++      if (process.config?.variables?.shlib_suffix === 'dll.a' || process.config?.variables?.node_target_type === 'shared_library' || process.config?.variables?.shlib_suffix === 'so') {
          try {
 -        return require('./example.win32-x64-gnu.node')
 +          let abi = "";
@@ -29,7 +32,7 @@ index aa786e27..8c2d2522 100644
      } else if (process.arch === 'arm64') {
        try {
 -        return require('./example.win32-arm64-msvc.node')
-+        if (process.config?.variables?.shlib_suffix === 'dll.a' || process.config?.variables?.node_target_type === 'shared_library') {
++        if (process.config?.variables?.shlib_suffix === 'dll.a' || process.config?.variables?.node_target_type === 'shared_library' || process.config?.variables?.shlib_suffix === 'so') {
 +          if (process.env.MSYSTEM !== 'CLANGARM64') {
 +            throw new Error('Unsupported platform')
 +          }
