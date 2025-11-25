@@ -122,11 +122,15 @@ jobs:
         run: |
           cd napi-rs
 
-          # - tsdown required for wasm
-          # - cannot run examples/napi/__tests__/values.spec.ts "Top-level await is not available
-          #   in the configured target environment"
+          # tsdown required for wasm
           git apply -v ../patches/napi-rs-skip-tests.patch
+          # cannot run examples/napi/__tests__/values.spec.ts "Top-level await is not available
+          # in the configured target environment", so run `test-js` instead, but need to comment
+          # out the types imported
+          git apply -v ../patches/examples-napi-__tests__-values-spec-ts.patch
+          # update which `.node` file to be loaded
           git apply -v ../patches/examples-napi-index-cjs.patch
+          # also `.node` related
           git apply -v ../patches/examples-napi-__tests__-unload-spec-js.patch
           # rolldown required
           rm cli/e2e/cli.spec.ts
