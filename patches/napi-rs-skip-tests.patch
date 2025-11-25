@@ -11,19 +11,6 @@ index 74ee9624..840f0039 100644
    const { tmpDir, packageJsonPath } = t.context
  
    // Create a package.json for WASM target
-diff --git a/examples/napi/__tests__/unload.spec.js b/examples/napi/__tests__/unload.spec.js
-index b864dcc4..e2517319 100644
---- a/examples/napi/__tests__/unload.spec.js
-+++ b/examples/napi/__tests__/unload.spec.js
-@@ -26,7 +26,7 @@ if (platforms.length === 1) {
-     binaryName = `example.${platforms.find(({ abi }) => abi === 'musl').platformArchABI}.node`
-   }
- } else if (process.platform === 'win32') {
--  binaryName = `example.${platforms.find(({ abi }) => abi === 'msvc').platformArchABI}.node`
-+  binaryName = `example.${platforms.find(({ abi }) => abi === 'gnu').platformArchABI}.node`
- } else {
-   throw new Error('unsupported platform')
- }
 diff --git a/examples/napi/__tests__/values.spec.ts b/examples/napi/__tests__/values.spec.ts
 index 8e0fa505..ef475ab4 100644
 --- a/examples/napi/__tests__/values.spec.ts

@@ -126,19 +126,12 @@ jobs:
           # - cannot run examples/napi/__tests__/values.spec.ts "Top-level await is not available
           #   in the configured target environment"
           git apply -v ../patches/napi-rs-skip-tests.patch
-          git apply -v ../patches/e_n_i_loading_gnu.patch
+          git apply -v ../patches/examples-napi-index-cjs.patch
+          git apply -v ../patches/examples-napi-__tests__-unload-spec-js.patch
           # rolldown required
           rm cli/e2e/cli.spec.ts
 
           yarn test:cli
-          # HACK: gnullvm
-          if [ "$MSYSTEM" = "CLANG64" ] ; then
-            mv examples/napi/example.win32-x64-gnullvm.node examples/napi/example.win32-x64-gnu.node
-          fi
-          if [ "$MSYSTEM" = "CLANGARM64" ] ; then
-            # HACK: this time instead of hacking index.cjs, rename the file temporarily
-            mv examples/napi/example.win32-arm64-gnullvm.node examples/napi/example.win32-arm64-msvc.node
-          fi
           yarn workspace @examples/napi test-js # run "test-js" instead of "test"
 
           # restore value.spec.ts for tsc
