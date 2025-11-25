@@ -1,5 +1,11 @@
 name: Build napi-rs with its dependencies
 
+env:
+  DEBUG: "napi:*"
+  RUST_BACKTRACE: 1
+  # https://github.com/nodejs/node/issues/51555#issuecomment-2290742072
+  DISABLE_V8_COMPILE_CACHE: 1
+
 on:
   push:
     branches:
@@ -110,3 +116,38 @@ jobs:
           cp ../oxc-node/target/$TARGET/release/oxc_node.dll $NODE_ARTIFACT
 
           yarn workspace @examples/napi build
+
+      - name: Test napi-rs (with patch)
+        shell: msys2 {0}
+        run: |
+          cd napi-rs
+
+          # tsdown required for wasm
+          git apply -v ../patches/napi-rs-skip-tests.patch
+          # cannot run examples/napi/__tests__/values.spec.ts "Top-level await is not available
+          # in the configured target environment", so run `test-js` instead, but need to comment
+          # out the types imported
+          git apply -v ../patches/examples-napi-__tests__-values-spec-ts.patch
+          # update which `.node` file to be loaded
+          git apply -v ../patches/examples-napi-index-cjs.patch
+          # also `.node` related
+          git apply -v ../patches/examples-napi-__tests__-unload-spec-js.patch
+          # rolldown required
+          rm cli/e2e/cli.spec.ts
+
+          yarn test:cli
+          yarn workspace @examples/napi test-js # run "test-js" instead of "test"
+
+          # restore value.spec.ts for tsc
+          git checkout examples/napi/__tests__/values.spec.ts
+          yarn tsc -p examples/napi/tsconfig.json --noEmit --skipLibCheck
+
+          yarn test:macro
+          cargo test
+
+          # Electron tests
+          node ./node_modules/electron/install.js
+          yarn test:electron
+
+          # Test build with profile
+          yarn workspace @examples/napi build --profile napi-rs-custom
