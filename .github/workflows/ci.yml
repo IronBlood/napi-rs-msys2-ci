@@ -136,7 +136,8 @@ jobs:
             mv examples/napi/example.win32-x64-gnullvm.node examples/napi/example.win32-x64-gnu.node
           fi
           if [ "$MSYSTEM" = "CLANGARM64" ] ; then
-            ls examples/napi/*.node
+            # HACK: this time instead of hacking index.cjs, rename the file temporarily
+            mv examples/napi/example.win32-arm64-gnullvm.node examples/napi/example.win32-arm64-msvc.node
           fi
           yarn workspace @examples/napi test-js # run "test-js" instead of "test"
 
