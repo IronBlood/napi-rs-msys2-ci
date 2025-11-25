@@ -131,6 +131,13 @@ jobs:
           rm cli/e2e/cli.spec.ts
 
           yarn test:cli
+          # HACK: gnullvm
+          if [ "$MSYSTEM" = "CLANG64" ] ; then
+            mv examples/napi/example.win32-x64-gnullvm.node examples/napi/example.win32-x64-gnu.node
+          fi
+          if [ "$MSYSTEM" = "CLANGARM64" ] ; then
+            ls examples/napi/*.node
+          fi
           yarn workspace @examples/napi test-js # run "test-js" instead of "test"
 
           # restore value.spec.ts for tsc
