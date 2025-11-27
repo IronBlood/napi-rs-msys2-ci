@@ -22,6 +22,9 @@ on:
 
 jobs:
   build:
+    env:
+      OXC_NODE_REF: "v0.0.34"
+      NAPI_RS_REF: "napi-v3.5.2"
     strategy:
       fail-fast: false
       matrix:
@@ -64,14 +67,14 @@ jobs:
       - name: Prepare oxs-node with patch
         shell: msys2 {0}
         run: |
-          git clone --depth 1 https://github.com/oxc-project/oxc-node
+          git clone --depth 1 --branch $OXC_NODE_REF https://github.com/oxc-project/oxc-node
           cd oxc-node
           git apply -v ../patches/oxc-node.cargo-config.patch
 
       - name: Prepare napi-rs
         shell: msys2 {0}
         run: |
-          git clone --depth 1 https://github.com/napi-rs/napi-rs
+          git clone --depth 1 --branch $NAPI_RS_REF https://github.com/napi-rs/napi-rs
 
       - name: Cache cargo build artifacts
         uses: actions/cache@v4
