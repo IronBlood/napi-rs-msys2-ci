@@ -101,22 +101,22 @@ jobs:
         shell: msys2 {0}
         run: |
           cd oxc-node
-          TARGET=$(rustc -vV | grep '^host:' | awk '{print $2}')
-          cargo build --release --target $TARGET
+          RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
+          cargo build --release --target $RS_TARGET_ARCH
 
       - name: Build napi-rs
         shell: msys2 {0}
         run: |
           cd napi-rs
           yarn install --mode=skip-build --immutable
-          TARGET=$(rustc -vV | grep '^host:' | awk '{print $2}')
+          RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
           NODE_ARTIFACT=node_modules/@oxc-node/core-win32-x64-msvc/oxc-node.win32-x64-msvc.node
           if [ "$MSYSTEM" = "CLANGARM64" ]; then
             NODE_ARTIFACT=node_modules/@oxc-node/core-win32-arm64-msvc/oxc-node.win32-arm64-msvc.node
           fi
 
           # HACK: loaded by napi-raw
-          cp ../oxc-node/target/$TARGET/release/oxc_node.dll $NODE_ARTIFACT
+          cp ../oxc-node/target/$RS_TARGET_ARCH/release/oxc_node.dll $NODE_ARTIFACT
 
           yarn workspace @examples/napi build
 
