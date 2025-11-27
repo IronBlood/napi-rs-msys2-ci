@@ -22,6 +22,9 @@ on:
 
 jobs:
   build:
+    env:
+      OXC_NODE_REF: "v0.0.34"
+      NAPI_RS_REF: "napi-v3.5.2"
     strategy:
       fail-fast: false
       matrix:
@@ -64,14 +67,14 @@ jobs:
       - name: Prepare oxs-node with patch
         shell: msys2 {0}
         run: |
-          git clone --depth 1 https://github.com/oxc-project/oxc-node
+          git clone --depth 1 --branch $OXC_NODE_REF https://github.com/oxc-project/oxc-node
           cd oxc-node
           git apply -v ../patches/oxc-node.cargo-config.patch
 
       - name: Prepare napi-rs
         shell: msys2 {0}
         run: |
-          git clone --depth 1 https://github.com/napi-rs/napi-rs
+          git clone --depth 1 --branch $NAPI_RS_REF https://github.com/napi-rs/napi-rs
 
       - name: Cache cargo build artifacts
         uses: actions/cache@v4
@@ -98,22 +101,23 @@ jobs:
         shell: msys2 {0}
         run: |
           cd oxc-node
-          TARGET=$(rustc -vV | grep '^host:' | awk '{print $2}')
-          cargo build --release --target $TARGET
+          RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
+          cargo build --release --target $RS_TARGET_ARCH
 
       - name: Build napi-rs
         shell: msys2 {0}
         run: |
           cd napi-rs
+          git apply -v ../patches/napi-rs-use-patched-napi-cli.patch
           yarn install --mode=skip-build --immutable
-          TARGET=$(rustc -vV | grep '^host:' | awk '{print $2}')
+          RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
           NODE_ARTIFACT=node_modules/@oxc-node/core-win32-x64-msvc/oxc-node.win32-x64-msvc.node
           if [ "$MSYSTEM" = "CLANGARM64" ]; then
             NODE_ARTIFACT=node_modules/@oxc-node/core-win32-arm64-msvc/oxc-node.win32-arm64-msvc.node
           fi
 
           # HACK: loaded by napi-raw
-          cp ../oxc-node/target/$TARGET/release/oxc_node.dll $NODE_ARTIFACT
+          cp ../oxc-node/target/$RS_TARGET_ARCH/release/oxc_node.dll $NODE_ARTIFACT
 
           yarn workspace @examples/napi build
 
@@ -124,22 +128,16 @@ jobs:
 
           # tsdown required for wasm
           git apply -v ../patches/napi-rs-skip-tests.patch
-          # cannot run examples/napi/__tests__/values.spec.ts "Top-level await is not available
-          # in the configured target environment", so run `test-js` instead, but need to comment
-          # out the types imported
-          git apply -v ../patches/examples-napi-__tests__-values-spec-ts.patch
-          # update which `.node` file to be loaded
-          git apply -v ../patches/examples-napi-index-cjs.patch
           # also `.node` related
           git apply -v ../patches/examples-napi-__tests__-unload-spec-js.patch
           # rolldown required
           rm cli/e2e/cli.spec.ts
 
           yarn test:cli
-          yarn workspace @examples/napi test-js # run "test-js" instead of "test"
+          # restore, remove the package @ironblood/napi-cli-build to pass the test
+          git checkout examples/napi/package.json
+          yarn workspace @examples/napi test
 
-          # restore value.spec.ts for tsc
-          git checkout examples/napi/__tests__/values.spec.ts
           yarn tsc -p examples/napi/tsconfig.json --noEmit --skipLibCheck
 
           yarn test:macro
