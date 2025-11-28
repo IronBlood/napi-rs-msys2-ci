@@ -66,7 +66,7 @@ jobs:
 
       - name: Prepare artifacts directory
         shell: msys2 {0}
-        run: mkdir $MSYSTEM-artifacts/
+        run: mkdir ~/$MSYSTEM-artifacts/
 
       - name: Prepare oxc-node for napi-rs
         uses: ./.github/actions/oxc-node-prepare.yml
@@ -103,6 +103,7 @@ jobs:
       - name: Build oxc-node for napi-rs
         uses: ./.github/actions/oxc-node-build.yml
         with:
+          ref: ${{ env.OXC_NODE_REF }}
           dir: oxc-node
 
       - name: Build napi-rs
@@ -118,7 +119,7 @@ jobs:
           fi
 
           # HACK: loaded by napi-raw
-          cp ../oxc-node/target/$RS_TARGET_ARCH/release/oxc_node.dll $NODE_ARTIFACT
+          cp ~/$MSYSTEM-artifacts/oxc_node-$OXC_NODE_REF.dll $NODE_ARTIFACT
 
           yarn workspace @examples/napi build
 
