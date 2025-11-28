@@ -108,6 +108,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.sys }}-cargo-
 
+      - name: Cache node_modules (oxc-node for rolldown)
+        uses: ./.github/actions/oxc-node-cache-node-modules.yml
+        with:
+          dir: oxc-node-${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
+          sys: ${{ matrix.sys }}
+
+      - name: Cache node_modules (oxc-node for napi-rs)
+        uses: ./.github/actions/oxc-node-cache-node-modules.yml
+        with:
+          dir: oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}
+          sys: ${{ matrix.sys }}
+
       - name: Cache node_modules (rolldown / pnpm)
         uses: actions/cache@v4
         with:
