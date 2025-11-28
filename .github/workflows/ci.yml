@@ -64,6 +64,10 @@ jobs:
           cargo -Vv
           pwd
 
+      - name: Prepare artifacts directory
+        shell: msys2 {0}
+        run: mkdir $MSYSTEM-artifacts/
+
       - name: Prepare oxs-node with patch
         shell: msys2 {0}
         run: |
