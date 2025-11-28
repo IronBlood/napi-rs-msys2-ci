@@ -155,7 +155,7 @@ jobs:
         run: |
           cd rolldown
           corepack enable
-          pnpm install
+          pnpm install --frozen-lockfile --ignore-scripts
           NODE_ARTIFACT=node_modules/.pnpm/@oxc-node+core-win32-x64-msvc@0.0.32/node_modules/@oxc-node/core-win32-x64-msvc/oxc-node.win32-x64-msvc.node
           if [ "$MSYSTEM" = "CLANGARM64" ]; then
           NODE_ARTIFACT=node_modules/.pnpm/@oxc-node+core-win32-arm64-msvc@0.0.32/node_modules/@oxc-node/core-win32-arm64-msvc/oxc-node.win32-arm64-msvc.node
