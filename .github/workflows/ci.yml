@@ -100,19 +100,29 @@ jobs:
             ${{ env.USERPROFILE }}\.cargo\git
             oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}/target
             oxc-node-${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}/target
+            rolldown/target
             napi-rs/target
           key: ${{ runner.os }}-${{ matrix.sys }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.sys }}-cargo-
 
-      - name: Cache node_modules
+      - name: Cache node_modules (rolldown / pnpm)
+        uses: actions/cache@v4
+        with:
+          path: |
+            rolldown/node_modules
+          key: ${{ runner.os }}-${{ matrix.sys }}-node-rolldown-${{ hashFiles('rolldown/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.sys }}-node-rolldown-
+
+      - name: Cache node_modules (napi-rs / yarn)
         uses: actions/cache@v4
         with:
           path: |
             napi-rs/node_modules
-          key: ${{ runner.os }}-${{ matrix.sys }}-node-${{ hashFiles('napi-rs/yarn.lock') }}
+          key: ${{ runner.os }}-${{ matrix.sys }}-node-napi-${{ hashFiles('napi-rs/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.sys }}-node-
+            ${{ runner.os }}-${{ matrix.sys }}-node-napi-
 
       - name: Build oxc-node for rolldown
         uses: ./.github/actions/oxc-node-build.yml
