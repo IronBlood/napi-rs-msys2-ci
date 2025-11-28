@@ -150,7 +150,7 @@ jobs:
           ref: ${{ env.OXC_NODE_FOR_NAPI_REF }}
           dir: oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}
 
-      - name: Build rolldown
+      - name: Prepare rolldown
         shell: msys2 {0}
         run: |
           cd rolldown
@@ -158,13 +158,18 @@ jobs:
           pnpm install --frozen-lockfile --ignore-scripts
           NODE_ARTIFACT=node_modules/.pnpm/@oxc-node+core-win32-x64-msvc@0.0.32/node_modules/@oxc-node/core-win32-x64-msvc/oxc-node.win32-x64-msvc.node
           if [ "$MSYSTEM" = "CLANGARM64" ]; then
-          NODE_ARTIFACT=node_modules/.pnpm/@oxc-node+core-win32-arm64-msvc@0.0.32/node_modules/@oxc-node/core-win32-arm64-msvc/oxc-node.win32-arm64-msvc.node
+            NODE_ARTIFACT=node_modules/.pnpm/@oxc-node+core-win32-arm64-msvc@0.0.32/node_modules/@oxc-node/core-win32-arm64-msvc/oxc-node.win32-arm64-msvc.node
           fi
           # HACK
           ls -alh ~/$MSYSTEM-artifacts
           sha1sum $NODE_ARTIFACT
           cp ~/$MSYSTEM-artifacts/oxc_node-$OXC_NODE_FOR_ROLLDOWN_REF.dll $NODE_ARTIFACT
           sha1sum $NODE_ARTIFACT
+
+      - name: Build rolldown
+        shell: msys2 {0}
+        run: |
+          cd rolldown
           RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
           pnpm ci:build-release-binding --target $RS_TARGET_ARCH
           cp target/$RS_TARGET_ARCH/release/rolldown_binding.dll ~/$MSYSTEM-artifacts/rolldown_binding-$ROLLDOWN_REF.dll
