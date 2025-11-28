@@ -100,12 +100,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.sys }}-node-
 
-      - name: Build oxc-node
-        shell: msys2 {0}
-        run: |
-          cd oxc-node
-          RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
-          cargo build --release --target $RS_TARGET_ARCH
+      - name: Build oxc-node for napi-rs
+        uses: ./.github/actions/oxc-node-build.yml
+        with:
+          dir: oxc-node
 
       - name: Build napi-rs
         shell: msys2 {0}
