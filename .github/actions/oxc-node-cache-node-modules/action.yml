@@ -1,0 +1,21 @@
+name: Cache oxc-node node_modules
+description: Cache node_modules for an oxc-node checkout
+inputs:
+  dir:
+    description: Directory where oxc-node is checked out
+    required: true
+  sys:
+    description: MSYS2 system name (matrix.sys) to scope platform-dependent installs
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache node_modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ inputs.dir }}/node_modules
+        key: ${{ runner.os }}-${{ inputs.sys }}-node-${{ inputs.dir }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', inputs.dir)) }}
+        restore-keys: |
+          ${{ runner.os }}-${{ inputs.sys }}-node-${{ inputs.dir }}-

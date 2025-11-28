@@ -1,0 +1,20 @@
+name: Build oxc-node
+description: Build an oxc-node checkout using cargo
+inputs:
+  ref:
+    description: Git ref (tag/branch) of oxc-node
+    required: true
+  dir:
+    description: Directory where oxc-node is checked out
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build with cargo
+      shell: msys2 {0}
+      run: |
+        cd "${{ inputs.dir }}"
+        RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
+        cargo build --release --target $RS_TARGET_ARCH
+        cp target/$RS_TARGET_ARCH/release/oxc_node.dll ~/$MSYSTEM-artifacts/oxc_node-${{ inputs.ref }}.dll
