@@ -23,8 +23,10 @@ on:
 jobs:
   build:
     env:
+      OXC_NODE_FOR_ROLLDOWN_REF: "v0.0.32"
       OXC_NODE_FOR_NAPI_REF: "v0.0.34"
       NAPI_RS_REF: "napi-v3.5.2"
+      ROLLDOWN_REF: "v1.0.0-beta.47"
     strategy:
       fail-fast: false
       matrix:
@@ -68,11 +70,22 @@ jobs:
         shell: msys2 {0}
         run: mkdir ~/$MSYSTEM-artifacts/
 
+      - name: Prepare oxc-node for rolldown
+        uses: ./.github/actions/oxc-node-prepare.yml
+        with:
+          ref: ${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
+          dir: oxc-node-${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
+
       - name: Prepare oxc-node for napi-rs
         uses: ./.github/actions/oxc-node-prepare.yml
         with:
           ref: ${{ env.OXC_NODE_FOR_NAPI_REF }}
           dir: oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}
+
+      - name: Prepare rolldown
+        shell: msys2 {0}
+        run: |
+          git clone --depth 1 --branch $ROLLDOWN_REF https://github.com/rolldown/rolldown
 
       - name: Prepare napi-rs
         shell: msys2 {0}
@@ -86,6 +99,7 @@ jobs:
             ${{ env.USERPROFILE }}\.cargo\registry
             ${{ env.USERPROFILE }}\.cargo\git
             oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}/target
+            oxc-node-${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}/target
             napi-rs/target
           key: ${{ runner.os }}-${{ matrix.sys }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
@@ -100,11 +114,33 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.sys }}-node-
 
+      - name: Build oxc-node for rolldown
+        uses: ./.github/actions/oxc-node-build.yml
+        with:
+          ref: ${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
+          dir: oxc-node-${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
+
       - name: Build oxc-node for napi-rs
         uses: ./.github/actions/oxc-node-build.yml
         with:
           ref: ${{ env.OXC_NODE_FOR_NAPI_REF }}
           dir: oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}
+
+      - name: Build rolldown
+        shell: msys2 {0}
+        run: |
+          cd rolldown
+          corepack enable
+          pnpm install
+          NODE_ARTIFACT=node_modules/.pnpm/@oxc-node+core-win32-x64-msvc@0.0.32/node_modules/@oxc-node/core-win32-x64-msvc/oxc-node.win32-x64-msvc.node
+          if [ "$MSYSTEM" = "CLANGARM64" ]; then
+          NODE_ARTIFACT=node_modules/.pnpm/@oxc-node+core-win32-arm64-msvc@0.0.32/node_modules/@oxc-node/core-win32-arm64-msvc/oxc-node.win32-arm64-msvc.node
+          fi
+          # HACK
+          cp ~/$MSYSTEM-artifacts/oxc_node-$OXC_NODE_FOR_ROLLDOWN_REF.dll $NODE_ARTIFACT
+          RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
+          pnpm ci:build-release-binding --target $RS_TARGET_ARCH
+          cp target/$RS_TARGET_ARCH/release/rolldown_binding.dll ~/$MSYSTEM-artifacts/rolldown_binding-$ROLLDOWN_REF.dll
 
       - name: Build napi-rs
         shell: msys2 {0}

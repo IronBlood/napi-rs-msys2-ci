@@ -1,0 +1,17 @@
+diff --git a/.cargo/config.toml b/.cargo/config.toml
+index eaa2aae..50821d6 100644
+--- a/.cargo/config.toml
++++ b/.cargo/config.toml
+@@ -1,4 +1,4 @@
+-[target.'cfg(target_env = "gnu")']
++[target.'cfg(all(target_env = "gnu", target_os = "linux"))']
+ rustflags = ["-C", "link-args=-Wl,-z,nodelete"]
+ 
+ [target.x86_64-pc-windows-msvc]
+@@ -6,3 +6,6 @@ rustflags = ["-C", "target-feature=+crt-static"]
+ 
+ [target.i686-pc-windows-msvc]
+ rustflags = ["-C", "target-feature=+crt-static"]
++
++[target.x86_64-pc-windows-gnu]
++rustflags = ["-C", "link-arg=-ladvapi32"]
