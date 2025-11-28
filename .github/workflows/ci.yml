@@ -71,13 +71,13 @@ jobs:
         run: mkdir ~/$MSYSTEM-artifacts/
 
       - name: Prepare oxc-node for rolldown
-        uses: ./.github/actions/oxc-node-prepare.yml
+        uses: ./.github/actions/oxc-node-prepare
         with:
           ref: ${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
           dir: oxc-node-${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
 
       - name: Prepare oxc-node for napi-rs
-        uses: ./.github/actions/oxc-node-prepare.yml
+        uses: ./.github/actions/oxc-node-prepare
         with:
           ref: ${{ env.OXC_NODE_FOR_NAPI_REF }}
           dir: oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}
@@ -109,13 +109,13 @@ jobs:
             ${{ runner.os }}-${{ matrix.sys }}-cargo-
 
       - name: Cache node_modules (oxc-node for rolldown)
-        uses: ./.github/actions/oxc-node-cache-node-modules.yml
+        uses: ./.github/actions/oxc-node-cache-node-modules
         with:
           dir: oxc-node-${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
           sys: ${{ matrix.sys }}
 
       - name: Cache node_modules (oxc-node for napi-rs)
-        uses: ./.github/actions/oxc-node-cache-node-modules.yml
+        uses: ./.github/actions/oxc-node-cache-node-modules
         with:
           dir: oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}
           sys: ${{ matrix.sys }}
@@ -139,13 +139,13 @@ jobs:
             ${{ runner.os }}-${{ matrix.sys }}-node-napi-
 
       - name: Build oxc-node for rolldown
-        uses: ./.github/actions/oxc-node-build.yml
+        uses: ./.github/actions/oxc-node-build
         with:
           ref: ${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
           dir: oxc-node-${{ env.OXC_NODE_FOR_ROLLDOWN_REF }}
 
       - name: Build oxc-node for napi-rs
-        uses: ./.github/actions/oxc-node-build.yml
+        uses: ./.github/actions/oxc-node-build
         with:
           ref: ${{ env.OXC_NODE_FOR_NAPI_REF }}
           dir: oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}
