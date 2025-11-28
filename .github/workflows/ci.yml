@@ -91,6 +91,8 @@ jobs:
         shell: msys2 {0}
         run: |
           git clone --depth 1 --branch $NAPI_RS_REF https://github.com/napi-rs/napi-rs
+          cd napi-rs
+          git apply -v ../patches/napi-rs-use-patched-napi-cli.patch
 
       - name: Cache cargo build artifacts
         uses: actions/cache@v4
@@ -156,7 +158,6 @@ jobs:
         shell: msys2 {0}
         run: |
           cd napi-rs
-          git apply -v ../patches/napi-rs-use-patched-napi-cli.patch
           yarn install --mode=skip-build --immutable
           RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
           NODE_ARTIFACT=node_modules/@oxc-node/core-win32-x64-msvc/oxc-node.win32-x64-msvc.node
