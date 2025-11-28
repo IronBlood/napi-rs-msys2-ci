@@ -2,7 +2,7 @@ name: Build napi-rs with its dependencies
 
 env:
   DEBUG: "napi:*"
-  RUST_BACKTRACE: 1
+  RUST_BACKTRACE: full
   # https://github.com/nodejs/node/issues/51555#issuecomment-2290742072
   DISABLE_V8_COMPILE_CACHE: 1
 
@@ -161,7 +161,10 @@ jobs:
           NODE_ARTIFACT=node_modules/.pnpm/@oxc-node+core-win32-arm64-msvc@0.0.32/node_modules/@oxc-node/core-win32-arm64-msvc/oxc-node.win32-arm64-msvc.node
           fi
           # HACK
+          ls -alh ~/$MSYSTEM-artifacts
+          sha1sum $NODE_ARTIFACT
           cp ~/$MSYSTEM-artifacts/oxc_node-$OXC_NODE_FOR_ROLLDOWN_REF.dll $NODE_ARTIFACT
+          sha1sum $NODE_ARTIFACT
           RS_TARGET_ARCH=$(rustc -vV | grep '^host:' | awk '{print $2}')
           pnpm ci:build-release-binding --target $RS_TARGET_ARCH
           cp target/$RS_TARGET_ARCH/release/rolldown_binding.dll ~/$MSYSTEM-artifacts/rolldown_binding-$ROLLDOWN_REF.dll
