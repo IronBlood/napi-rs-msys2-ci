@@ -1,0 +1,23 @@
+name: Prepare oxc-node
+description: Clone oxc-node at a given ref and apply the cargo config patch
+inputs:
+  ref:
+    description: Git ref (tag/branch) of oxc-node
+    required: true
+  dir:
+    description: Target directory name to clone into
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Clone oxc-node
+      shell: msys2 {0}
+      run: |
+        git clone --depth 1 --branch "${{ inputs.ref }}" https://github.com/oxc-project/oxc-node "${{ inputs.dir }}"
+
+    - name: Apply cargo config patch
+      shell: msys2 {0}
+      run: |
+        cd "${{ inputs.dir }}"
+        git apply -v "../patches/oxc-node.${{ inputs.ref }}/.cargo-config.patch"
