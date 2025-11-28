@@ -23,7 +23,7 @@ on:
 jobs:
   build:
     env:
-      OXC_NODE_REF: "v0.0.34"
+      OXC_NODE_FOR_NAPI_REF: "v0.0.34"
       NAPI_RS_REF: "napi-v3.5.2"
     strategy:
       fail-fast: false
@@ -71,8 +71,8 @@ jobs:
       - name: Prepare oxc-node for napi-rs
         uses: ./.github/actions/oxc-node-prepare.yml
         with:
-          ref: ${{ env.OXC_NODE_REF }}
-          dir: oxc-node
+          ref: ${{ env.OXC_NODE_FOR_NAPI_REF }}
+          dir: oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}
 
       - name: Prepare napi-rs
         shell: msys2 {0}
@@ -85,7 +85,7 @@ jobs:
           path: |
             ${{ env.USERPROFILE }}\.cargo\registry
             ${{ env.USERPROFILE }}\.cargo\git
-            oxc-node/target
+            oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}/target
             napi-rs/target
           key: ${{ runner.os }}-${{ matrix.sys }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
@@ -103,8 +103,8 @@ jobs:
       - name: Build oxc-node for napi-rs
         uses: ./.github/actions/oxc-node-build.yml
         with:
-          ref: ${{ env.OXC_NODE_REF }}
-          dir: oxc-node
+          ref: ${{ env.OXC_NODE_FOR_NAPI_REF }}
+          dir: oxc-node-${{ env.OXC_NODE_FOR_NAPI_REF }}
 
       - name: Build napi-rs
         shell: msys2 {0}
@@ -119,7 +119,7 @@ jobs:
           fi
 
           # HACK: loaded by napi-raw
-          cp ~/$MSYSTEM-artifacts/oxc_node-$OXC_NODE_REF.dll $NODE_ARTIFACT
+          cp ~/$MSYSTEM-artifacts/oxc_node-$OXC_NODE_FOR_NAPI_REF.dll $NODE_ARTIFACT
 
           yarn workspace @examples/napi build
 
