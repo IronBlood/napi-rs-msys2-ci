@@ -191,7 +191,7 @@ jobs:
           cd napi-rs
 
           # HACK: use rolldown dll built in the previous step
-          cp ~/$MSYSTEM-artifacts/rolldown-$ROLLDOWN_REF/src/rolldown-binding.*.node node_modules/rolldown/dist/shared/
+          cp ~/$MSYSTEM-artifacts/rolldown-$ROLLDOWN_REF/rolldown-binding.*.node node_modules/rolldown/dist/shared/
           # also `.node` related
           git apply -v ../patches/examples-napi-__tests__-unload-spec-js.patch
 
