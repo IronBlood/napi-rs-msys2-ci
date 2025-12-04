@@ -191,7 +191,8 @@ jobs:
           cd napi-rs
 
           # HACK: use rolldown dll built in the previous step
-          cp ~/$MSYSTEM-artifacts/rolldown-$ROLLDOWN_REF/rolldown-binding.*.node node_modules/rolldown/dist/shared/
+          # HACK: on CLANG64 / CLANGARM64, `-gnu` is loaded instead of `-gnullvm`, a bug related to napi-cli itself
+          cp ~/$MSYSTEM-artifacts/rolldown-$ROLLDOWN_REF/rolldown-binding.*.node node_modules/rolldown/dist/shared/rolldown-binding.win32-x64-gnu.node
           # also `.node` related
           git apply -v ../patches/examples-napi-__tests__-unload-spec-js.patch
 
