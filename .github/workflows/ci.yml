@@ -190,12 +190,10 @@ jobs:
         run: |
           cd napi-rs
 
-          # tsdown required for wasm
-          git apply -v ../patches/napi-rs-skip-tests.patch
+          # HACK: use rolldown dll built in the previous step
+          cp ~/$MSYSTEM-artifacts/rolldown-$ROLLDOWN_REF/src/rolldown-binding.*.node node_modules/rolldown/dist/shared/
           # also `.node` related
           git apply -v ../patches/examples-napi-__tests__-unload-spec-js.patch
-          # rolldown required
-          rm cli/e2e/cli.spec.ts
 
           yarn test:cli
           # restore, remove the package @ironblood/napi-cli-build to pass the test
