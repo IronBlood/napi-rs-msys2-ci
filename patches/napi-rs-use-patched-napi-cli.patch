@@ -91,7 +91,7 @@ index d10e5e17..97f7ab5a 100644
    resolution: "@examples/napi@workspace:examples/napi"
    dependencies:
      "@emnapi/core": "npm:^1.7.0"
-+    "@ironblood/napi-cli-build": "npm:3.4.1-alpha.2"
++    "@ironblood/napi-cli-build": "npm:3.4.1-alpha.3"
      "@napi-rs/cli": "workspace:*"
      "@napi-rs/triples": "workspace:*"
      "@napi-rs/wasm-runtime": "workspace:*"
