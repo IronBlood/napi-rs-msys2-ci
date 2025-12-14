@@ -5,6 +5,10 @@ env:
   RUST_BACKTRACE: full
   # https://github.com/nodejs/node/issues/51555#issuecomment-2290742072
   DISABLE_V8_COMPILE_CACHE: 1
+  OXC_NODE_FOR_ROLLDOWN_REF: "v0.0.32"
+  OXC_NODE_FOR_NAPI_REF: "v0.0.34"
+  NAPI_RS_REF: "napi-v3.5.2"
+  ROLLDOWN_REF: "v1.0.0-beta.47"
 
 on:
   push:
@@ -22,11 +26,6 @@ on:
 
 jobs:
   build:
-    env:
-      OXC_NODE_FOR_ROLLDOWN_REF: "v0.0.32"
-      OXC_NODE_FOR_NAPI_REF: "v0.0.34"
-      NAPI_RS_REF: "napi-v3.5.2"
-      ROLLDOWN_REF: "v1.0.0-beta.47"
     strategy:
       fail-fast: false
       matrix:
@@ -217,3 +216,59 @@ jobs:
 
           # Test build with profile
           yarn workspace @examples/napi build --profile napi-rs-custom
+
+      - name: Upload examples/napi artifacts
+        if: ${{ matrix.sys == 'UCRT64' }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: example.win32-x64-gnu.node
+          path: napi-rs/examples/napi/example.win32-x64-gnu.node
+
+  Test:
+    strategy:
+      matrix:
+        sys: [CLANG64, MINGW64]
+    runs-on: "windows-latest"
+    needs:
+      - build
+
+    steps:
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.sys }}
+          update: false
+          pacboy: >-
+            yarn:p
+
+      - name: Prepare napi-rs
+        shell: msys2 {0}
+        run: |
+          git clone --depth 1 --branch $NAPI_RS_REF https://github.com/napi-rs/napi-rs
+
+      - name: Cache node_modules (napi-rs / yarn)
+        uses: actions/cache@v4
+        with:
+          path: |
+            napi-rs/node_modules
+          key: ${{ runner.os }}-${{ matrix.sys }}-node-napi-${{ hashFiles('napi-rs/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.sys }}-node-napi-
+
+      - name: Install packages for napi-rs
+        working-directory: napi-rs
+        run: |
+          yarn install --mode=skip-build --immutable
+          node ./node_modules/electron/install.js
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v6
+        with:
+          name: example.win32-x64-gnu.node
+          # HACK in this phase napi-rs isn't built need to name as msvc to get loaded
+          path: napi-rs/examples/napi/example.win32-x64-msvc.node
+
+      - name: Test electron
+        working-directory: napi-rs
+        run: |
+          yarn test:electron
