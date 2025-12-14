@@ -54,7 +54,7 @@ index 913af027..c07f7381 100644
      ]
    },
    "devDependencies": {
-+    "@ironblood/napi-cli-build": "3.4.1-alpha.2",
++    "@ironblood/napi-cli-build": "3.4.1-alpha.3",
      "@napi-rs/cli": "workspace:*",
      "@napi-rs/triples": "workspace:*",
      "@napi-rs/wasm-runtime": "workspace:*",
@@ -79,7 +79,7 @@ index 5fceafef..6fe049dc 100644
      ]
    },
    "devDependencies": {
-+    "@ironblood/napi-cli-build": "3.4.1-alpha.2",
++    "@ironblood/napi-cli-build": "3.4.1-alpha.3",
      "@napi-rs/cli": "workspace:*",
      "@oxc-node/core": "^0.0.34",
      "@taplo/cli": "^0.7.0",
@@ -91,7 +91,7 @@ index d10e5e17..97f7ab5a 100644
    resolution: "@examples/napi@workspace:examples/napi"
    dependencies:
      "@emnapi/core": "npm:^1.7.0"
-+    "@ironblood/napi-cli-build": "npm:3.4.1-alpha.2"
++    "@ironblood/napi-cli-build": "npm:3.4.1-alpha.3"
      "@napi-rs/cli": "workspace:*"
      "@napi-rs/triples": "workspace:*"
      "@napi-rs/wasm-runtime": "workspace:*"
@@ -99,9 +99,9 @@ index d10e5e17..97f7ab5a 100644
    languageName: node
    linkType: hard
  
-+"@ironblood/napi-cli-build@npm:3.4.1-alpha.2":
-+  version: 3.4.1-alpha.2
-+  resolution: "@ironblood/napi-cli-build@npm:3.4.1-alpha.2"
++"@ironblood/napi-cli-build@npm:3.4.1-alpha.3":
++  version: 3.4.1-alpha.3
++  resolution: "@ironblood/napi-cli-build@npm:3.4.1-alpha.3"
 +  dependencies:
 +    "@napi-rs/wasm-tools": "npm:^1.0.1"
 +    clipanion: "npm:^4.0.0-rc.4"
@@ -111,7 +111,7 @@ index d10e5e17..97f7ab5a 100644
 +  bin:
 +    napi-build: dist/cli.js
 +    napi-raw-build: cli.mjs
-+  checksum: 10c0/1284a9919a5a1963b77975dff0eb3e09b47fe5325d23f889a02b54caa2700068e6bf5c686cd34a6e06b85a59faca9c963eb236d99918078fb70bf5a0a065c6f3
++  checksum: 10c0/5224c62ac1ca005cf39f3da4e4e2bd86ba0d49cda22fca7c192672d551363648349a44b65e2c7857cf3b9c6e0adb2687ece0cb0032efe0d0dce2ae0aeaaf5bb0
 +  languageName: node
 +  linkType: hard
 +
@@ -122,7 +122,7 @@ index d10e5e17..97f7ab5a 100644
    version: 0.0.0-use.local
    resolution: "napi-rs@workspace:."
    dependencies:
-+    "@ironblood/napi-cli-build": "npm:3.4.1-alpha.2"
++    "@ironblood/napi-cli-build": "npm:3.4.1-alpha.3"
      "@napi-rs/cli": "workspace:*"
      "@oxc-node/core": "npm:^0.0.34"
      "@taplo/cli": "npm:^0.7.0"
