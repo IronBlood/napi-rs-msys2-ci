@@ -226,6 +226,13 @@ jobs:
             napi-rs/examples/napi/example.win32-x64-gnu.node
             napi-rs/examples/napi/index.cjs
 
+      - name: Show SHA256 digests
+        if: ${{ matrix.sys == 'UCRT64' }}
+        shell: msys2 {0}
+        run: |
+          sha256sum napi-rs/examples/napi/example.win32-x64-gnu.node
+          sha256sum napi-rs/examples/napi/index.cjs
+
   Test:
     strategy:
       fail-fast: false
@@ -262,6 +269,7 @@ jobs:
 
       - name: Install packages for napi-rs
         working-directory: napi-rs
+        shell: msys2 {0}
         run: |
           yarn install --mode=skip-build --immutable
           node ./node_modules/electron/install.js
@@ -272,7 +280,14 @@ jobs:
           name: example-artifacts
           path: napi-rs/examples/napi/
 
+      - name: Verify SHA256 digests
+        shell: msys2 {0}
+        run: |
+          sha256sum napi-rs/examples/napi/example.win32-x64-gnu.node
+          sha256sum napi-rs/examples/napi/index.cjs
+
       - name: Test electron
         working-directory: napi-rs
+        shell: msys2 {0}
         run: |
           yarn test:electron
