@@ -221,8 +221,10 @@ jobs:
         if: ${{ matrix.sys == 'UCRT64' }}
         uses: actions/upload-artifact@v5
         with:
-          name: example.win32-x64-gnu.node
-          path: napi-rs/examples/napi/example.win32-x64-gnu.node
+          name: example-artifacts
+          path: |
+            napi-rs/examples/napi/example.win32-x64-gnu.node
+            napi-rs/examples/napi/index.cjs
 
   Test:
     strategy:
@@ -267,9 +269,8 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v6
         with:
-          name: example.win32-x64-gnu.node
-          # HACK in this phase napi-rs isn't built need to name as msvc to get loaded
-          path: napi-rs/examples/napi/example.win32-x64-msvc.node
+          name: example-artifacts
+          path: napi-rs/examples/napi/
 
       - name: Test electron
         working-directory: napi-rs
