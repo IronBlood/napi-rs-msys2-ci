@@ -184,6 +184,22 @@ jobs:
 
           yarn workspace @examples/napi build
 
+      - name: Upload examples/napi artifacts
+        if: ${{ matrix.sys == 'UCRT64' }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: example-artifacts
+          path: |
+            napi-rs/examples/napi/example.win32-x64-gnu.node
+            napi-rs/examples/napi/index.cjs
+
+      - name: Show SHA256 digests
+        if: ${{ matrix.sys == 'UCRT64' }}
+        shell: msys2 {0}
+        run: |
+          sha256sum napi-rs/examples/napi/example.win32-x64-gnu.node
+          sha256sum napi-rs/examples/napi/index.cjs
+
       - name: Test napi-rs (with patch)
         shell: msys2 {0}
         run: |
@@ -216,22 +232,6 @@ jobs:
 
           # Test build with profile
           yarn workspace @examples/napi build --profile napi-rs-custom
-
-      - name: Upload examples/napi artifacts
-        if: ${{ matrix.sys == 'UCRT64' }}
-        uses: actions/upload-artifact@v5
-        with:
-          name: example-artifacts
-          path: |
-            napi-rs/examples/napi/example.win32-x64-gnu.node
-            napi-rs/examples/napi/index.cjs
-
-      - name: Show SHA256 digests
-        if: ${{ matrix.sys == 'UCRT64' }}
-        shell: msys2 {0}
-        run: |
-          sha256sum napi-rs/examples/napi/example.win32-x64-gnu.node
-          sha256sum napi-rs/examples/napi/index.cjs
 
   Test:
     strategy:
