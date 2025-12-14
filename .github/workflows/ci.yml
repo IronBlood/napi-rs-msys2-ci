@@ -226,6 +226,7 @@ jobs:
 
   Test:
     strategy:
+      fail-fast: false
       matrix:
         sys: [CLANG64, MINGW64]
     runs-on: "windows-latest"
@@ -238,6 +239,8 @@ jobs:
         with:
           msystem: ${{ matrix.sys }}
           update: false
+          install: >-
+            git
           pacboy: >-
             yarn:p
 
