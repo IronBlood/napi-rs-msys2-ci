@@ -33,6 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          repository: IronBlood/napi-rs
+          ref: msys2/js-binding-template
           path: napi-rs
 
       # NOTE: The patch should be applied to the upstream
