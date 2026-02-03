@@ -160,7 +160,7 @@ jobs:
           msystem: ${{ matrix.settings.sys }}
           update: true
           install: >-
-            base-devel
+            git
           pacboy: >-
             toolchain:p
             cmake:p
