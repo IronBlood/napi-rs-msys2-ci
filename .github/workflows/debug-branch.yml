@@ -184,6 +184,7 @@ jobs:
         shell: msys2 {0}
         working-directory: napi-rs
         run: |
+          corepack enable
           yarn install --immutable --mode=skip-build
 
       # HACK: replace the msvc version
